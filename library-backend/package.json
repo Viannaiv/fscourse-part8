@@ -1,6 +1,7 @@
 {
   "name": "fs8-graphql",
   "version": "1.0.0",
+  "private": true,
   "description": "",
   "main": "library-backend.js",
   "scripts": {
