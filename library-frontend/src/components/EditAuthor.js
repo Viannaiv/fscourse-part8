@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { EDIT_AUTHOR } from '../queries'
 
-const EditAuthor = ({ authors }) => {
+const EditAuthor = ({ show, authors }) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
 
@@ -11,12 +11,18 @@ const EditAuthor = ({ authors }) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    editAuthor({ variables: { name, setBornTo: Number(born) } })
-    console.log('edit author')
+    if (name) {
+      const bornAsNum = born && Number(born) ? Number(born) : born
+      editAuthor({ variables: { name, setBornTo: bornAsNum } })
+      console.log('edit author: ', name)
 
-    setName('')
-    setBorn('')
+      setBorn('')
+    } else {
+      console.log('select an author to edit')
+    }
   }
+
+  if (!show) return null
 
   return (
     <div>
@@ -24,7 +30,8 @@ const EditAuthor = ({ authors }) => {
       <form onSubmit={submit}>
         <div>
           name
-          <select onChange={({ target }) => setName(target.value)}>
+          <select onChange={({ target }) => setName(target.value)} defaultValue={''}>
+            <option hidden value={''}>Select author</option>
             {authors.map(author => <option value={author.name} key={author.name}>{author.name}</option>)}
           </select>
         </div>
